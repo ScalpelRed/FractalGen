@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Specification-Title: fractalgen
+Specification-Version: 1
+Implementation-Title: FractalGen
+Implementation-Version: 1.18.2-v0.1a-23m05с
+Implementation-Timestamp: 2023-05-16T16:28:16+0800
+
