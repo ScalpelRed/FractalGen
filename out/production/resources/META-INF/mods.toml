@@ -1,0 +1,31 @@
+
+modLoader="javafml"
+loaderVersion="[40,)"
+license="All Rights Reserved"
+
+[[mods]]
+modId="fractalgen"
+version="0.1a"
+displayName="FractalGen"
+displayURL='''
+    https://www.youtube.com/@scalpelred
+    https://www.youtube.com/@scalpelredLamp'''
+#logoFile="worldGenerationTemplate.png"
+authors="ScalpelRed"
+description='''
+Generates fractal-shaped worlds.
+'''
+
+[[dependencies.fractalgen]]
+   modId="forge"
+   mandatory=true
+   versionRange="[40,)"
+   ordering="NONE"
+   side="BOTH"
+
+[[dependencies.fractalgen]]
+   modId="minecraft"
+   mandatory=true
+   versionRange="[1.18.2,1.19)"
+   ordering="NONE"
+   side="BOTH"
