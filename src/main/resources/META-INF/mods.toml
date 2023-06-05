@@ -1,0 +1,35 @@
+
+modLoader="javafml"
+loaderVersion="[40,)"
+license="All Rights Reserved"
+
+[[mods]]
+modId="fractalgen"
+version="0.1a (build 23m05с)"
+displayName="FractalGen"
+displayURL='''
+https://www.youtube.com/@scalpelred
+https://www.youtube.com/@scalpelredLamp'''
+#logoFile="fractalgen.png"
+authors="ScalpelRed"
+description='''
+Generates fractal shaped worlds.
+> Mandelbulb
+> Mandelbrot set extrusion (planned)
+> Julia set 3D (planned)
+> Julia set extrusion (planned)
+'''
+
+[[dependencies.fractalgen]]
+   modId="forge"
+   mandatory=true
+   versionRange="[40,)"
+   ordering="NONE"
+   side="BOTH"
+
+[[dependencies.fractalgen]]
+   modId="minecraft"
+   mandatory=true
+   versionRange="[1.18.2,1.19)"
+   ordering="NONE"
+   side="BOTH"

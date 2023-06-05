@@ -1,0 +1,12 @@
+(dd.mm.yy)
+
+06.05.23 - 0.1a-23m05a
+> Mandelbulb added
+
+07.05.23 - 0.1a-23m05b
+> Fixed mbBlockMode definition in config
+
+15.05.23 - 0.1a-23m05c
+> Mandelbulb now generates in nether and the end
+> Changed mandelbulb default scale (384 -> 320) and shiftY (-64 -> 0)
+> Generation settings are now stored in level.dat
