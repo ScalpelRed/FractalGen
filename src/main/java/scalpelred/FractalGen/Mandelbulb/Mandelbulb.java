@@ -21,7 +21,6 @@ public class Mandelbulb {
 			if ((i < Params.LengthChecks) && (t.LengthSquare() > 4)) return Double.NaN;
 		}
 
-		int a = 0;
 		return t.LengthSquare();
 	}
 	
