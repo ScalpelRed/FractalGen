@@ -1,33 +1,33 @@
-
 modLoader="javafml"
 loaderVersion="[40,)"
 license="All Rights Reserved"
 
 [[mods]]
-modId="fractalgen"
-version="0.1a (build 23m05с)"
-displayName="FractalGen"
-displayURL='''
-https://www.youtube.com/@scalpelred
-https://www.youtube.com/@scalpelredLamp'''
-#logoFile="fractalgen.png"
-authors="ScalpelRed"
+modId="bruhgen1"
+version="${file.jarVersion}"
+displayName="BruhGen1"
 description='''
-Generates fractal shaped worlds.
-> Mandelbulb
-> Mandelbrot set extrusion (planned)
-> Julia set 3D (planned)
-> Julia set extrusion (planned)
-'''
+Generates weird worlds.
+Part 1.
 
-[[dependencies.fractalgen]]
+> Parabola
+> Sine
+> Radial sine
+> Chunkgrid
+> Cubegrid
+> Height by polar data
+> Sections
+> Round chunks
+> Average block
+> Scaled Y
+'''
+[[dependencies.bruhgen1]]
    modId="forge"
    mandatory=true
    versionRange="[40,)"
    ordering="NONE"
    side="BOTH"
-
-[[dependencies.fractalgen]]
+[[dependencies.bruhgen1]]
    modId="minecraft"
    mandatory=true
    versionRange="[1.18.2,1.19)"
