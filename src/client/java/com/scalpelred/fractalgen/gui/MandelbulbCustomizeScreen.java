@@ -33,23 +33,20 @@ import java.util.function.Function;
 public class MandelbulbCustomizeScreen extends Screen {
 
     private static final Text TEXT_TITLE = Text.translatable("gui.customize.mandelbulb.title");
-    private static final Text TEXT_TITLE_GEOMETRY_OVERWORLD = Text.translatable("gui.customize.mandelbulb.geometry_params.overworld");
-    private static final Text TEXT_TITLE_GEOMETRY_NETHER = Text.translatable("gui.customize.mandelbulb.geometry_params.nether");
-    private static final Text TEXT_TITLE_GEOMETRY_THEEND = Text.translatable("gui.customize.mandelbulb.geometry_params.the_end");
-    private static final Text TEXT_TITLE_BIOME_OVERWORLD = Text.translatable("gui.customize.mandelbulb.biome_params.overworld");
-    private static final Text TEXT_TITLE_BIOME_NETHER = Text.translatable("gui.customize.mandelbulb.biome_params.nether");
-    private static final Text TEXT_TITLE_BIOME_THEEND = Text.translatable("gui.customize.mandelbulb.biome_params.the_end");
+    private static final Text TEXT_TITLE_OVERWORLD = Text.translatable("gui.customize.mandelbulb.title.overworld");
+    private static final Text TEXT_TITLE_NETHER = Text.translatable("gui.customize.mandelbulb.title.nether");
+    private static final Text TEXT_TITLE_THEEND = Text.translatable("gui.customize.mandelbulb.title.the_end");
 
     private final CreateWorldScreen parent;
 
-    MandelbulbSettings overworldGeometrySettings;
-    MandelbulbSettings netherGeometrySettings;
-    MandelbulbSettings theEndGeometrySettings;
+    MandelbulbSettings overworldSettings;
+    MandelbulbSettings netherSettings;
+    MandelbulbSettings theEndSettings;
 
     private final TabManager tabManager = new TabManager(this::addDrawableChild, this::remove);
-    private MandelbulbTab overworldGeometryTab;
-    private MandelbulbTab netherGeometryTab;
-    private MandelbulbTab theEndGeometryTab;
+    private MandelbulbTab overworldTab;
+    private MandelbulbTab netherTab;
+    private MandelbulbTab theEndTab;
 
     public MandelbulbCustomizeScreen(CreateWorldScreen parent,
                                      GeneratorOptionsHolder generatorOptionsHolder) {
@@ -61,19 +58,19 @@ public class MandelbulbCustomizeScreen extends Screen {
         Optional<DimensionOptions> overworld = dimensionOptionsRegistry.getOrEmpty(DimensionOptions.OVERWORLD);
         if (overworld.isPresent()) {
             MandelbulbChunkGenerator chunkGenerator = (MandelbulbChunkGenerator)overworld.get().chunkGenerator();
-            overworldGeometrySettings = chunkGenerator.getSettings();
+            overworldSettings = chunkGenerator.getSettings();
         }
 
         Optional<DimensionOptions> nether = dimensionOptionsRegistry.getOrEmpty(DimensionOptions.NETHER);
         if (nether.isPresent()) {
             MandelbulbChunkGenerator chunkGenerator = (MandelbulbChunkGenerator)nether.get().chunkGenerator();
-            netherGeometrySettings = chunkGenerator.getSettings();
+            netherSettings = chunkGenerator.getSettings();
         }
 
         Optional<DimensionOptions> theEnd = dimensionOptionsRegistry.getOrEmpty(DimensionOptions.END);
         if (theEnd.isPresent()) {
             MandelbulbChunkGenerator chunkGenerator = (MandelbulbChunkGenerator)theEnd.get().chunkGenerator();
-            theEndGeometrySettings = chunkGenerator.getSettings();
+            theEndSettings = chunkGenerator.getSettings();
         }
     }
 
@@ -85,12 +82,12 @@ public class MandelbulbCustomizeScreen extends Screen {
         ArrayList<Tab> tabList = new ArrayList<>();
         tabList.add(new HelpTab());
         // in case that... um... any mod removes default dimensions... it's unlikely, but it may happen.
-        if (overworldGeometrySettings != null) tabList.add(overworldGeometryTab = new MandelbulbTab(
-                TEXT_TITLE_GEOMETRY_OVERWORLD, overworldGeometrySettings));
-        if (netherGeometrySettings != null) tabList.add(netherGeometryTab = new MandelbulbTab(
-                TEXT_TITLE_GEOMETRY_NETHER, netherGeometrySettings));
-        if (theEndGeometrySettings != null) tabList.add(theEndGeometryTab = new MandelbulbTab(
-                TEXT_TITLE_GEOMETRY_THEEND, theEndGeometrySettings));
+        if (overworldSettings != null) tabList.add(overworldTab = new MandelbulbTab(
+                TEXT_TITLE_OVERWORLD, overworldSettings));
+        if (netherSettings != null) tabList.add(netherTab = new MandelbulbTab(
+                TEXT_TITLE_NETHER, netherSettings));
+        if (theEndSettings != null) tabList.add(theEndTab = new MandelbulbTab(
+                TEXT_TITLE_THEEND, theEndSettings));
         // actually, I don't know if they can be removed
 
         TabNavigationWidget tabs = TabNavigationWidget.builder(this.tabManager, this.width)
@@ -101,9 +98,9 @@ public class MandelbulbCustomizeScreen extends Screen {
         GridWidget.Adder adder = grid.createAdder(2);
 
         ButtonWidget buttonWidget = ButtonWidget.builder(ScreenTexts.DONE, button -> {
-            if (overworldGeometrySettings != null) overworldGeometryTab.saveValues();
-            if (netherGeometryTab != null) netherGeometryTab.saveValues();
-            if (theEndGeometryTab != null) theEndGeometryTab.saveValues();
+            if (overworldSettings != null) overworldTab.saveValues();
+            if (netherTab != null) netherTab.saveValues();
+            if (theEndTab != null) theEndTab.saveValues();
             client.setScreen(parent);
         }).build();
         adder.add(buttonWidget, 1);
@@ -135,7 +132,7 @@ public class MandelbulbCustomizeScreen extends Screen {
 
             MandelbulbChunkGenerator chunkGenerator = new MandelbulbChunkGenerator(
                     MultiNoiseBiomeSource.create(params),
-                    overworldGeometrySettings
+                    overworldSettings
             );
             return dimensionRegistryHolder.with(dynamicRegistryManager, chunkGenerator);
         });
@@ -266,7 +263,7 @@ public class MandelbulbCustomizeScreen extends Screen {
         private final MultilineTextWidget text;
 
         public HelpTab() {
-            super(Text.translatable("gui.customize.mandelbulb.help_title"));
+            super(Text.translatable("gui.customize.mandelbulb.title.help"));
             MandelbulbCustomizeScreen parent = MandelbulbCustomizeScreen.this;
             GridWidget.Adder adder = grid.createAdder(1);
 
