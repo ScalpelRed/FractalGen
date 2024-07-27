@@ -1,0 +1,11 @@
+{
+	"required": true,
+	"package": "com.scalpelred.fractalgen.mixin.client",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"MixinWorldCreator"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

@@ -1,0 +1,94 @@
+{
+  "dimensions": {
+    "minecraft:overworld": {
+      "type": "minecraft:overworld",
+      "generator": {
+        "type": "minecraft:mandelbulb",
+        "biomesource": {
+          "type": "minecraft:fixed",
+          "biome": "minecraft:taiga"
+        },
+        "settings": {
+          "iterations": 60,
+          "post_iterations": 4,
+          "power": 8.0,
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 320.0,
+            "y": 320.0,
+            "z": 320.0
+          },
+          "translation": {
+            "x": 0.0,
+            "y": -64.0,
+            "z": 0.0
+          }
+        }
+      }
+    },
+    "minecraft:the_end": {
+      "type": "minecraft:the_end",
+      "generator": {
+        "type": "minecraft:mandelbulb",
+        "biomesource": {
+          "type": "minecraft:fixed",
+          "biome": "minecraft:the_end"
+        },
+        "settings": {
+          "iterations": 60,
+          "post_iterations": 4,
+          "power": 5.0,
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 128.0,
+            "y": 128.0,
+            "z": 128.0
+          },
+          "translation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        }
+      }
+    },
+    "minecraft:the_nether": {
+      "type": "minecraft:the_nether",
+      "generator": {
+        "type": "minecraft:mandelbulb",
+        "biomesource": {
+          "type": "minecraft:fixed",
+          "biome": "minecraft:crimson_forest"
+        },
+        "settings": {
+          "iterations": 60,
+          "post_iterations": 4,
+          "power": -2.0,
+          "rotation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "scale": {
+            "x": 76.0,
+            "y": 76.0,
+            "z": 76.0
+          },
+          "translation": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        }
+      }
+    }
+  }
+}
