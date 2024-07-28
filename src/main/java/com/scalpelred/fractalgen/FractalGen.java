@@ -32,6 +32,11 @@ public class FractalGen implements ModInitializer {
 }
 
 // TODO
+// validation (general)
+// validation (tab headers)
 // fix formulae
-// validation
-//
+// rotation
+// server config
+// list view in settings
+// Julia set
+

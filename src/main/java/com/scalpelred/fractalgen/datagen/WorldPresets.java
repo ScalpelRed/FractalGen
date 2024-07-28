@@ -6,6 +6,7 @@ import com.scalpelred.fractalgen.mandelbulb.MandelbulbChunkGenerator;
 import com.scalpelred.fractalgen.mandelbulb.MandelbulbSettings;
 import net.minecraft.registry.*;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.biome.source.FixedBiomeSource;
@@ -29,8 +30,6 @@ public abstract class WorldPresets {
         RegistryEntryLookup<DimensionType> dimensionTypeRegistry
                 = presetRegisterable.getRegistryLookup(RegistryKeys.DIMENSION_TYPE);
         RegistryEntryLookup<Biome> biomeRegistry = presetRegisterable.getRegistryLookup(RegistryKeys.BIOME);
-        RegistryEntryLookup<MultiNoiseBiomeSourceParameterList> paramRegistry
-                = presetRegisterable.getRegistryLookup(RegistryKeys.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST);
 
         DimensionOptions overworldOptions = new DimensionOptions(
                     dimensionTypeRegistry.getOrThrow(DimensionTypes.OVERWORLD),
@@ -38,31 +37,34 @@ public abstract class WorldPresets {
                             new FixedBiomeSource(biomeRegistry.getOrThrow(BiomeKeys.TAIGA)),
                             new MandelbulbSettings(
                                     8, 60, 4,
-                            new ComplexNumber3(320),
-                            new ComplexNumber3(0),
-                            new ComplexNumber3(0, -64, 0)
+                                new ComplexNumber3(320),
+                                new ComplexNumber3(0),
+                                new ComplexNumber3(0, -64, 0),
+                                BiomeKeys.TAIGA.getValue()
                     )));
 
         DimensionOptions netherOptions = new DimensionOptions(
                     dimensionTypeRegistry.getOrThrow(DimensionTypes.THE_NETHER),
-                    new MandelbulbChunkGenerator(
-                            new FixedBiomeSource(biomeRegistry.getOrThrow(BiomeKeys.CRIMSON_FOREST)),
-                            new MandelbulbSettings(
-                            -2, 60, 4,
-                            new ComplexNumber3(76),
-                            new ComplexNumber3(0),
-                            new ComplexNumber3(0, 0, 0)
+                new MandelbulbChunkGenerator(
+                        new FixedBiomeSource(biomeRegistry.getOrThrow(BiomeKeys.CRIMSON_FOREST)),
+                        new MandelbulbSettings(
+                                -2, 60, 4,
+                                new ComplexNumber3(76),
+                                new ComplexNumber3(0),
+                                new ComplexNumber3(0, 0, 0),
+                                BiomeKeys.CRIMSON_FOREST.getValue()
                     )));
 
         DimensionOptions theEndOptions = new DimensionOptions(
                     dimensionTypeRegistry.getOrThrow(DimensionTypes.THE_END),
-                    new MandelbulbChunkGenerator(
-                            new FixedBiomeSource(biomeRegistry.getOrThrow(BiomeKeys.THE_END)),
-                            new MandelbulbSettings(
-                            5, 60, 4,
-                            new ComplexNumber3(128),
-                            new ComplexNumber3(0),
-                            new ComplexNumber3(0, 0, 0)
+                new MandelbulbChunkGenerator(
+                        new FixedBiomeSource(biomeRegistry.getOrThrow(BiomeKeys.THE_END)),
+                        new MandelbulbSettings(
+                                5, 60, 4,
+                                new ComplexNumber3(128),
+                                new ComplexNumber3(0),
+                                new ComplexNumber3(0, 0, 0),
+                                BiomeKeys.THE_END.getValue()
                     )));
 
         presetRegisterable.register(MANDELBULB, new WorldPreset(Map.of(

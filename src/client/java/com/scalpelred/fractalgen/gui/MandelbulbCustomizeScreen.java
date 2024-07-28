@@ -1,30 +1,26 @@
 package com.scalpelred.fractalgen.gui;
 
+import com.google.common.collect.ImmutableMap;
 import com.scalpelred.fractalgen.ComplexNumber3;
 import com.scalpelred.fractalgen.mandelbulb.MandelbulbChunkGenerator;
 import com.scalpelred.fractalgen.mandelbulb.MandelbulbSettings;
-import net.minecraft.client.font.MultilineText;
+import com.scalpelred.fractalgen.mandelbulb.MandelbulbSettingsMutable;
 import net.minecraft.client.gui.ScreenRect;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.world.CreateWorldScreen;
-import net.minecraft.client.gui.screen.world.CustomizeBuffetLevelScreen;
-import net.minecraft.client.gui.screen.world.CustomizeFlatLevelScreen;
-import net.minecraft.client.gui.screen.world.PresetsScreen;
 import net.minecraft.client.gui.tab.GridScreenTab;
 import net.minecraft.client.gui.tab.Tab;
 import net.minecraft.client.gui.tab.TabManager;
 import net.minecraft.client.gui.widget.*;
 import net.minecraft.client.world.GeneratorOptionsHolder;
-import net.minecraft.registry.RegistryEntryLookup;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
-import net.minecraft.world.biome.source.MultiNoiseBiomeSource;
-import net.minecraft.world.biome.source.MultiNoiseBiomeSourceParameterList;
-import net.minecraft.world.biome.source.MultiNoiseBiomeSourceParameterLists;
-import net.minecraft.world.dimension.DimensionOptions;
-import net.minecraft.world.dimension.DimensionOptionsRegistryHolder;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.source.FixedBiomeSource;
+import net.minecraft.world.dimension.*;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -98,17 +94,16 @@ public class MandelbulbCustomizeScreen extends Screen {
         GridWidget.Adder adder = grid.createAdder(2);
 
         ButtonWidget buttonWidget = ButtonWidget.builder(ScreenTexts.DONE, button -> {
-            if (overworldSettings != null) overworldTab.saveValues();
-            if (netherTab != null) netherTab.saveValues();
-            if (theEndTab != null) theEndTab.saveValues();
+            if (overworldSettings != null) overworldSettings = overworldTab.saveValues();
+            if (netherSettings != null) netherSettings = netherTab.saveValues();
+            if (theEndSettings != null) theEndSettings = theEndTab.saveValues();
+            applyModifier();
             client.setScreen(parent);
         }).build();
         adder.add(buttonWidget, 1);
         addDrawableChild(buttonWidget);
 
-        buttonWidget = ButtonWidget.builder(ScreenTexts.CANCEL, button -> {
-            client.setScreen(parent);
-        }).build();
+        buttonWidget = ButtonWidget.builder(ScreenTexts.CANCEL, button -> client.setScreen(parent)).build();
         adder.add(buttonWidget, 1);
         addDrawableChild(buttonWidget);
 
@@ -124,18 +119,39 @@ public class MandelbulbCustomizeScreen extends Screen {
     }
 
     private void applyModifier() {
-        parent.getWorldCreator().applyModifier((dynamicRegistryManager, dimensionRegistryHolder) -> {
-            RegistryEntryLookup<MultiNoiseBiomeSourceParameterList> paramRegistry
-                    = dynamicRegistryManager.getWrapperOrThrow(RegistryKeys.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST);
-            RegistryEntry.Reference<MultiNoiseBiomeSourceParameterList> params
-                    = paramRegistry.getOrThrow(MultiNoiseBiomeSourceParameterLists.OVERWORLD);
+        GeneratorOptionsHolder.RegistryAwareModifier modifier
+                = (dynamicRegistryManager, dimensionsRegistryHolder) -> {
 
-            MandelbulbChunkGenerator chunkGenerator = new MandelbulbChunkGenerator(
-                    MultiNoiseBiomeSource.create(params),
-                    overworldSettings
-            );
-            return dimensionRegistryHolder.with(dynamicRegistryManager, chunkGenerator);
-        });
+            Registry<DimensionType> dimTypeRegistry = dynamicRegistryManager.get(RegistryKeys.DIMENSION_TYPE);
+            Registry<Biome> biomeRegistry = dynamicRegistryManager.get(RegistryKeys.BIOME);
+
+            ImmutableMap.Builder<RegistryKey<DimensionOptions>, DimensionOptions> builder = ImmutableMap.builder();
+
+            builder.put(DimensionOptions.OVERWORLD, new DimensionOptions(
+                    dimTypeRegistry.getEntry(dimTypeRegistry.get(DimensionTypes.OVERWORLD.getValue())),
+                    new MandelbulbChunkGenerator(
+                            new FixedBiomeSource(biomeRegistry.getEntry(biomeRegistry.get(
+                                    overworldSettings.getBiome()))), overworldSettings)
+            ));
+
+            builder.put(DimensionOptions.NETHER, new DimensionOptions(
+                    dimTypeRegistry.getEntry(dimTypeRegistry.get(DimensionTypes.THE_NETHER.getValue())),
+                    new MandelbulbChunkGenerator(
+                            new FixedBiomeSource(biomeRegistry.getEntry(biomeRegistry.get(
+                                    netherSettings.getBiome()))), netherSettings)
+            ));
+
+            builder.put(DimensionOptions.END, new DimensionOptions(
+                    dimTypeRegistry.getEntry(dimTypeRegistry.get(DimensionTypes.THE_END.getValue())),
+                    new MandelbulbChunkGenerator(
+                            new FixedBiomeSource(biomeRegistry.getEntry(biomeRegistry.get(
+                                    theEndSettings.getBiome()))), theEndSettings)
+            ));
+
+            return new DimensionOptionsRegistryHolder(builder.buildKeepingLast());
+        };
+
+        parent.getWorldCreator().applyModifier(modifier);
     }
 
 
@@ -161,11 +177,11 @@ public class MandelbulbCustomizeScreen extends Screen {
         private final TextFieldWidget postIterationsField;
 
         private final GridWidget.Adder adder;
-        private final MandelbulbSettings settings;
+        private final MandelbulbSettingsMutable settings;
 
         MandelbulbTab(Text title, MandelbulbSettings settings) {
             super(title);
-            this.settings = settings;
+            this.settings = new MandelbulbSettingsMutable(settings);
             this.grid.setSpacing(5);
             this.grid.setColumnSpacing(10);
             adder = this.grid.createAdder(2);
@@ -212,49 +228,51 @@ public class MandelbulbCustomizeScreen extends Screen {
 
         private void resetValues() {
 
-            powerField.setText(String.valueOf(settings.getPower()));
-            iterationsField.setText(String.valueOf(settings.getIterations()));
-            postIterationsField.setText(String.valueOf(settings.getPostIterations()));
+            powerField.setText(String.valueOf(settings.power));
+            iterationsField.setText(String.valueOf(settings.iterations));
+            postIterationsField.setText(String.valueOf(settings.postIterations));
 
-            ComplexNumber3 vec = settings.getScale();
+            ComplexNumber3 vec = settings.scale;
             scaleXField.setText(String.valueOf(vec.x));
             scaleYField.setText(String.valueOf(vec.y));
             scaleZField.setText(String.valueOf(vec.z));
 
-            vec = settings.getRotation();
+            vec = settings.rotation;
             rotationXField.setText(String.valueOf(vec.x));
             rotationYField.setText(String.valueOf(vec.y));
             rotationZField.setText(String.valueOf(vec.z));
 
-            vec = settings.getTranslation();
+            vec = settings.translation;
             translationXField.setText(String.valueOf(vec.x));
             translationYField.setText(String.valueOf(vec.y));
             translationZField.setText(String.valueOf(vec.z));
         }
 
-        public void saveValues() {
+        public MandelbulbSettings saveValues() {
 
-            settings.setPower(Double.parseDouble(powerField.getText()));
-            settings.setIterations(Integer.parseInt(iterationsField.getText()));
-            settings.setPostIterations(Integer.parseInt(postIterationsField.getText()));
+            settings.power = Double.parseDouble(powerField.getText());
+            settings.iterations = Integer.parseInt(iterationsField.getText());
+            settings.postIterations = Integer.parseInt(postIterationsField.getText());
 
-            settings.setScale(ComplexNumber3.parse(
+            settings.scale = ComplexNumber3.parse(
                     scaleXField.getText(),
                     scaleYField.getText(),
                     scaleZField.getText()
-            ));
+            );
 
-            settings.setRotation(ComplexNumber3.parse(
+            settings.rotation = ComplexNumber3.parse(
                     rotationXField.getText(),
                     rotationYField.getText(),
                     rotationZField.getText()
-            ));
+            );
 
-            settings.setTranslation(ComplexNumber3.parse(
+            settings.translation = ComplexNumber3.parse(
                     translationXField.getText(),
                     translationYField.getText(),
                     translationZField.getText()
-            ));
+            );
+
+            return settings.toImmutable();
         }
     }
 

@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.scalpelred.fractalgen.ComplexNumber3;
 import net.minecraft.block.BlockState;
 import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
 
 import java.util.List;
@@ -19,7 +20,8 @@ public class MandelbulbSettings {
                     Codec.INT.fieldOf("post_iterations").forGetter(MandelbulbSettings::getPostIterations),
                     ComplexNumber3.CODEC.fieldOf("scale").forGetter(MandelbulbSettings::getScale),
                     ComplexNumber3.CODEC.fieldOf("rotation").forGetter(MandelbulbSettings::getRotation),
-                    ComplexNumber3.CODEC.fieldOf("translation").forGetter(MandelbulbSettings::getTranslation)
+                    ComplexNumber3.CODEC.fieldOf("translation").forGetter(MandelbulbSettings::getTranslation),
+                    Identifier.CODEC.fieldOf("biome").forGetter(MandelbulbSettings::getBiome)
             ).apply(instance, MandelbulbSettings::new));
 
     private double power;
@@ -28,15 +30,18 @@ public class MandelbulbSettings {
     private ComplexNumber3 scale;
     private ComplexNumber3 rotation;
     private ComplexNumber3 translation;
+    private Identifier biome;
 
     public MandelbulbSettings(double power, int iterations, int postIterations,
-                              ComplexNumber3 scale, ComplexNumber3 rotation, ComplexNumber3 translation) {
+                              ComplexNumber3 scale, ComplexNumber3 rotation, ComplexNumber3 translation,
+                              Identifier biome) {
         this.power = power;
         this.iterations = iterations;
         this.postIterations = postIterations;
         this.scale = scale;
         this.rotation = rotation;
         this.translation = translation;
+        this.biome = biome;
     }
 
     public double getPower() {
@@ -105,6 +110,14 @@ public class MandelbulbSettings {
             cpos.add(pos0);
         }
         return cpos.getRadiusSqr();
+    }
+
+    public void setBiome(Identifier biome) {
+        this.biome = biome;
+    }
+
+    public Identifier getBiome() {
+        return biome;
     }
 
 

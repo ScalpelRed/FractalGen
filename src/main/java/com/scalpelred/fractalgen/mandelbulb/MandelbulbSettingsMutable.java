@@ -1,8 +1,7 @@
 package com.scalpelred.fractalgen.mandelbulb;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.scalpelred.fractalgen.ComplexNumber3;
+import net.minecraft.util.Identifier;
 
 public class MandelbulbSettingsMutable {
 
@@ -12,15 +11,18 @@ public class MandelbulbSettingsMutable {
     public ComplexNumber3 scale;
     public ComplexNumber3 rotation;
     public ComplexNumber3 translation;
+    public Identifier biome;
 
     public MandelbulbSettingsMutable(double power, int iterations, int postIterations,
-                                     ComplexNumber3 scale, ComplexNumber3 rotation, ComplexNumber3 translation) {
+                                     ComplexNumber3 scale, ComplexNumber3 rotation, ComplexNumber3 translation,
+                                     Identifier biome) {
         this.power = power;
         this.iterations = iterations;
         this.postIterations = postIterations;
         this.scale = scale;
         this.rotation = rotation;
         this.translation = translation;
+        this.biome = biome;
     }
 
     public MandelbulbSettingsMutable(MandelbulbSettings src) {
@@ -30,11 +32,12 @@ public class MandelbulbSettingsMutable {
         scale = src.getScale();
         rotation = src.getRotation();
         translation = src.getTranslation();
+        biome = src.getBiome();
     }
 
     public MandelbulbSettings toImmutable() {
         return new MandelbulbSettings(power, iterations, postIterations, scale, rotation,
-                translation);
+                translation, biome);
     }
 
 }

@@ -9,6 +9,7 @@
           "biome": "minecraft:taiga"
         },
         "settings": {
+          "biome": "minecraft:taiga",
           "iterations": 60,
           "post_iterations": 4,
           "power": 8.0,
@@ -39,6 +40,7 @@
           "biome": "minecraft:the_end"
         },
         "settings": {
+          "biome": "minecraft:the_end",
           "iterations": 60,
           "post_iterations": 4,
           "power": 5.0,
@@ -69,6 +71,7 @@
           "biome": "minecraft:crimson_forest"
         },
         "settings": {
+          "biome": "minecraft:crimson_forest",
           "iterations": 60,
           "post_iterations": 4,
           "power": -2.0,
